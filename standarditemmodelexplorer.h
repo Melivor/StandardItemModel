@@ -21,8 +21,8 @@ public:
     Q_INVOKABLE void deleteCurrentSelection();
     void getModelList();
     Q_INVOKABLE void addNew(const QString& name="", bool setCurrentSelection=true, bool setActiveSelection=false);
-    StandardItemModel* currentModel(){return m_currentModel;}
-    StandardItemModel* activeModel(){return m_activeModel;}
+    StandardItemModel* currentModel() const {return m_currentModel;}
+    StandardItemModel* activeModel() const {return m_activeModel;}
     int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
     QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
