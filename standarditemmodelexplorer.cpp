@@ -119,7 +119,7 @@ void StandardItemModelExplorer::deleteCurrentSelection()
       getModelList();
 }
 
-QVariant StandardItemModelExplorer::getActiveData(int row, int column, int section, int role)
+QVariant StandardItemModelExplorer::getActiveData(int row, int column, int section, int role) const
 {
     if(!m_activeModel){
         return QVariant();
@@ -127,14 +127,14 @@ QVariant StandardItemModelExplorer::getActiveData(int row, int column, int secti
     return getData(m_activeModel, row, column, section, role);
 }
 
-QVariant StandardItemModelExplorer::getCurrentData(int row, int column, int section, int role)
+QVariant StandardItemModelExplorer::getCurrentData(int row, int column, int section, int role) const
 {
     if(!m_currentModel){
         return QVariant();
     }
     return getData(m_currentModel, row, column, section, role);
 }
-QVariant StandardItemModelExplorer::getData(StandardItemModel *model, int row, int column, int section, int role)
+QVariant StandardItemModelExplorer::getData(StandardItemModel *model, int row, int column, int section, int role) const
 {
     if(section>-1){
         if(section<model->sections().size()){

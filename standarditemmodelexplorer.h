@@ -25,10 +25,10 @@ public:
     StandardItemModel* activeModel(){return m_activeModel;}
     int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
-    QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole);
-    QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole);
+    QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
+    QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
 private :
-    QVariant getData(StandardItemModel* model, int row, int column, int section, int role);
+    QVariant getData(StandardItemModel* model, int row, int column, int section, int role) const;
     QString m_rootPath;
     QStringList m_modelNames;
     int m_activeSelection=-1;
