@@ -118,3 +118,35 @@ void StandardItemModelExplorer::deleteCurrentSelection()
       m_activeSelection=-1;
       getModelList();
 }
+
+QVariant StandardItemModelExplorer::getActiveData(int row, int column, int section, int role)
+{
+    if(!m_activeModel){
+        return QVariant();
+    }
+    return getData(m_activeModel, row, column, section, role);
+}
+
+QVariant StandardItemModelExplorer::getCurrentData(int row, int column, int section, int role)
+{
+    if(!m_currentModel){
+        return QVariant();
+    }
+    return getData(m_currentModel, row, column, section, role);
+}
+QVariant StandardItemModelExplorer::getData(StandardItemModel *model, int row, int column, int section, int role)
+{
+    if(section>-1){
+        if(section<model->sections().size()){
+            auto&& subModel=model->sections()[section];
+            if(row>=0 && row<subModel->rowCount() && column>=0 && column<subModel->columnCount()){
+                return subModel->data(subModel->index(row, column),role);
+            }
+        }
+        return QVariant();
+    }
+    if(row>=0 && row<model->rowCount() && column>=0 && column<model->columnCount()){
+        return model->data(model->index(row, column),role);
+    }
+    return QVariant();
+}

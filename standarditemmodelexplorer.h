@@ -11,6 +11,7 @@ class StandardItemModelExplorer : public QAbstractListModel
     Q_PROPERTY(int activeSelection READ activeSelection WRITE setActiveSelection NOTIFY activeSelectionChanged)
 public:
     StandardItemModelExplorer(StandardItemModel* prototype, QObject* parent=nullptr);
+
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const {Q_UNUSED(parent);return m_modelNames.size();}
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const {Q_UNUSED(role); return m_modelNames[index.row()];}
     Q_INVOKABLE void setCurrentSelection(int row, bool save=true);
@@ -24,8 +25,10 @@ public:
     StandardItemModel* activeModel(){return m_activeModel;}
     int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
+    QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole);
+    QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole);
 private :
-
+    QVariant getData(StandardItemModel* model, int row, int column, int section, int role);
     QString m_rootPath;
     QStringList m_modelNames;
     int m_activeSelection=-1;
