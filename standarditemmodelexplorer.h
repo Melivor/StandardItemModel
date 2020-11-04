@@ -22,7 +22,8 @@ public:
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
-    Q_INVOKABLE QString path(){return m_prototype->findPath();}
+    Q_INVOKABLE QString path(){QString path=m_prototype->findPath();auto strList=path.split("/"); return path.remove(strList.back());}
+    Q_INVOKABLE QString pathXml(){return m_prototype->findPath();}
 
    // Q_INVOKABLE QString defaultName(){return m_defaultName;}
     //Q_INVOKABLE void deleteCurrentSelection();

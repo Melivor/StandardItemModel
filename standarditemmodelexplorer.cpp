@@ -91,20 +91,10 @@ void StandardItemModelExplorer::copyProfilSettings(const QString &name)
 {
 
     QString pname=m_prototype->name();
-    qDebug()<<"Name before copy: "<<pname;
     setActiveSelection(name);
     m_prototype->setName(pname);
-    qDebug()<<"Name after copy: "<<m_prototype->name();
+
 }
-
-//void StandardItemModelExplorer::setCurrentSelection(const QString& name)
-//{
-//    int index=m_modelNames.indexOf(name);
-//    if(index>=0){
-//        setCurrentSelection(index);
-//    }
-//}
-
 
 void StandardItemModelExplorer::getModelList()
 {
