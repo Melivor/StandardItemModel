@@ -5,21 +5,24 @@ StandardItemModel::StandardItemModel(const QString &name, const QString &root, Q
     m_root=root;
 }
 
-StandardItemModel::StandardItemModel(const StandardItemModel& other) : m_name(other.m_name), m_root(other.m_root), m_sections(other.m_sections)
-{
-    setParent(other.parent());
-    for(int row=0; row<other.rowCount(); ++row){
-        for(int column=0; column<other.columnCount(); ++column){
-              QStandardItemModel::appendRow(other.item(row, column));
-        }
-    }
-    for(int row=0; row<other.rowCount(); ++row){
-        setHeaderData(row, Qt::Vertical,other.headerData(row, Qt::Vertical));
-    }
-    for(int column=0; column<other.columnCount(); ++column){
-        setHeaderData(column, Qt::Horizontal,other.headerData(column, Qt::Horizontal));
-    }
-}
+//StandardItemModel::StandardItemModel(const StandardItemModel& other) : m_name(other.m_name), m_root(other.m_root)
+//{
+//    setParent(other.parent());
+//    for(int row=0; row<other.rowCount(); ++row){
+//        for(int column=0; column<other.columnCount(); ++column){
+//              QStandardItemModel::appendRow(new StandardItem(*other.item(row, column)));
+//        }
+//    }
+//    for(int row=0; row<other.rowCount(); ++row){
+//        setHeaderData(row, Qt::Vertical,other.headerData(row, Qt::Vertical));
+//    }
+//    for(int column=0; column<other.columnCount(); ++column){
+//        setHeaderData(column, Qt::Horizontal,other.headerData(column, Qt::Horizontal));
+//    }
+//    for(auto section:other.m_sections){
+//        m_sections.push_back(new StandardItemModel(*section));
+//    }
+//}
 
 QHash<int, QByteArray> StandardItemModel::roleNames() const
 {
@@ -42,6 +45,13 @@ void StandardItemModel::appendRow(StandardItem *item)
 {
     QStandardItemModel::appendRow(item);
     setHeaderData(rowCount()-1,Qt::Vertical,item->data(NameRole));
+}
+
+void StandardItemModel::appendRows(QList<StandardItem*> items)
+{
+    for(auto item:items){
+        appendRow(item);
+    }
 }
 
 void StandardItemModel::save(QSettings &settings)
@@ -92,6 +102,17 @@ QString StandardItemModel::findPath() const
         dir.cd(m_root);
     }
     return dir.path()+"/"+m_name+".xml";
+}
+
+QString StandardItemModel::findPath(const QString &name, const QString &root)
+{
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QDir dir(path);
+    if(root!=""){
+        dir.mkdir(root);
+        dir.cd(root);
+    }
+    return dir.path()+"/"+name+".xml";
 }
 void StandardItemModel::saveAsXml(const QString &path)
 {

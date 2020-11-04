@@ -5,12 +5,9 @@
 StandardItemModelExplorer::StandardItemModelExplorer(StandardItemModel *prototype, QObject* parent):QAbstractListModel(parent),m_rootPath(prototype->root()),m_prototype(prototype)
 {
     m_prototype->setParent(this);
-    m_activeModel=new StandardItemModel(*m_prototype);
-    m_currentModel=new StandardItemModel(*m_prototype);
-
     getModelList();
     if(m_modelNames.size()==0){
-        m_activeModel->saveAsXml();
+        m_prototype->saveAsXml();
         getModelList();
     }
 
@@ -19,36 +16,49 @@ StandardItemModelExplorer::StandardItemModelExplorer(StandardItemModel *prototyp
 
 void StandardItemModelExplorer::setActiveSelection(int row, bool save)
 {
-    if(row<0 || row>=rowCount() || row==m_activeSelection || m_activeModel==nullptr)
+    if(row<0 || row>=rowCount() || row==m_activeSelection || m_prototype==nullptr)
     {
         return;
     }
-    m_activeSelection=row;
-    if(save){
-        m_activeModel->saveAsXml();
-    }
 
-    m_activeModel->setName(m_modelNames[m_activeSelection]);
-    m_activeModel->loadXml();
+    if(save){
+        m_prototype->saveAsXml();
+    }
+    m_activeSelection=row;
+    //setEffectiveSelection(row);
+    m_prototype->setName(m_modelNames[m_activeSelection]);
+    m_prototype->loadXml();
     emit activeSelectionChanged();
 }
 
-void StandardItemModelExplorer::setCurrentSelection(int row, bool save)
-{
-    if(row<0 || row>=rowCount() || row==m_currentSelection || m_currentModel==nullptr)
-    {
-        return;
-    }
-    m_currentSelection=row;
-    if(save){
-        m_currentModel->saveAsXml();
-    }
+//void StandardItemModelExplorer::setCurrentSelection(int row, bool save)
+//{
+//    if(row<0 || row>=rowCount() || row==m_currentSelection || m_prototype==nullptr)
+//    {
+//        return;
+//    }
 
-    m_currentModel->setName(m_modelNames[m_currentSelection]);
-    m_currentModel->loadXml();
-    emit currentSelectionChanged();
-}
+//    if(save){
+//        m_prototype->saveAsXml();
+//    }
+//    m_currentSelection=row;
+//    setEffectiveSelection(row);
+//    qDebug()<<"Current selection is "<<row<<m_modelNames[row]<<"effective selection is: "<<m_effectiveSelection;
+//    emit currentSelectionChanged();
+//    //emit activeSelectionChanged();
+//}
 
+//void StandardItemModelExplorer::setEffectiveSelection(int row)
+//{
+//    if(m_effectiveSelection==row){
+//        return;
+//    }
+//    m_effectiveSelection=row;
+//    qDebug()<<"Active selection is "<<row<<m_modelNames[row]<<"effective selection is: "<<m_effectiveSelection;
+//    m_prototype->setName(m_modelNames[m_effectiveSelection]);
+//    m_prototype->loadXml();
+//    qDebug()<<"Effectice selection is "<<row<<m_modelNames[row];
+//}
 void StandardItemModelExplorer::setActiveSelection(const QString& name)
 {
     int index=m_modelNames.indexOf(name);
@@ -58,13 +68,13 @@ void StandardItemModelExplorer::setActiveSelection(const QString& name)
 }
 
 
-void StandardItemModelExplorer::setCurrentSelection(const QString& name)
-{
-    int index=m_modelNames.indexOf(name);
-    if(index>=0){
-        setCurrentSelection(index);
-    }
-}
+//void StandardItemModelExplorer::setCurrentSelection(const QString& name)
+//{
+//    int index=m_modelNames.indexOf(name);
+//    if(index>=0){
+//        setCurrentSelection(index);
+//    }
+//}
 
 
 void StandardItemModelExplorer::getModelList()
@@ -81,61 +91,60 @@ void StandardItemModelExplorer::getModelList()
         m_modelNames.append(modelPath);
     }
     endResetModel();
-    setCurrentSelection(0, false);
+    if(m_modelNames.empty()){
+        unselect();
+        return;
+    }
+    //setCurrentSelection(0, false);
     setActiveSelection(0, false);
 }
 
-void StandardItemModelExplorer::addNew(const QString& name, bool setCurrentSelection, bool setActiveSelection)
+void StandardItemModelExplorer::addNew(const QString& name, bool setActiveSelection)
 {
     if(m_prototype==nullptr){
         qWarning()<<"You need to set a prototype first";
         return;
     }
-
-    StandardItemModel newModel=StandardItemModel(*m_prototype);
-
-    if(name!=""){
-        newModel.setName(name);
-    }
-
-    newModel.setRoot(m_rootPath);
-    newModel.saveAsXml();
+    unselect();
+    m_prototype->setName(name);
+    m_prototype->saveAsXml();
     getModelList();
-    int row=m_modelNames.indexOf(newModel.name());
-    if(setCurrentSelection){
-       StandardItemModelExplorer::setCurrentSelection(row);
-    }
+    int row=m_modelNames.indexOf(name);
+//    if(setCurrentSelection){
+//       StandardItemModelExplorer::setCurrentSelection(row);
+//    }
     if(setActiveSelection){
         StandardItemModelExplorer::setActiveSelection(row);
     }
     return;
 }
 
-void StandardItemModelExplorer::deleteCurrentSelection()
-{
-      QFile::remove(m_currentModel->findPath());
-      m_currentSelection=-1;
-      m_activeSelection=-1;
-      getModelList();
-}
+//void StandardItemModelExplorer::deleteCurrentSelection()
+//{
+//      QFile::remove(StandardItemModel::findPath(m_prototype->root(), m_modelNames[m_currentSelection]));
+//      deleteModel(m_modelNames[m_currentSelection]);
+//}
 
+void StandardItemModelExplorer::deleteModel(const QString &name)
+{
+    QFile::remove(StandardItemModel::findPath(m_prototype->root(), name));
+    unselect();
+    getModelList();
+}
 QVariant StandardItemModelExplorer::getActiveData(int row, int column, int section, int role) const
 {
-    if(!m_activeModel){
-        return QVariant();
-    }
-    return getData(m_activeModel, row, column, section, role);
+    return getData(activeModel(), row, column, section, role);
 }
 
-QVariant StandardItemModelExplorer::getCurrentData(int row, int column, int section, int role) const
-{
-    if(!m_currentModel){
-        return QVariant();
-    }
-    return getData(m_currentModel, row, column, section, role);
-}
+//QVariant StandardItemModelExplorer::getCurrentData(int row, int column, int section, int role) const
+//{
+//    return getData(currentModel(), row, column, section, role);
+//}
 QVariant StandardItemModelExplorer::getData(StandardItemModel *model, int row, int column, int section, int role) const
 {
+    if(model==nullptr){
+        return QVariant();
+    }
     if(section>-1){
         if(section<model->sections().size()){
             auto&& subModel=model->sections()[section];
@@ -150,3 +159,55 @@ QVariant StandardItemModelExplorer::getData(StandardItemModel *model, int row, i
     }
     return QVariant();
 }
+
+StandardItemModel* StandardItemModelExplorer::activeModel() const
+{
+//    if(m_activeSelection<0||m_activeSelection>=m_modelNames.size()){
+//        return nullptr;
+//    }
+//    if(m_activeSelection!=m_effectiveSelection){
+//        m_prototype->setName(m_modelNames[m_activeSelection]);
+//        m_prototype->loadXml();
+//        m_effectiveSelection=m_activeSelection;
+//    }
+    return m_prototype;
+}
+
+//StandardItemModel* StandardItemModelExplorer::currentModel() const
+//{
+//    qDebug()<<"Getting current model";
+//    if(m_currentSelection<0||m_currentSelection>=m_modelNames.size()){
+//        return nullptr;
+//    }
+//    if(m_currentSelection!=m_effectiveSelection){
+//        m_prototype->setName(m_modelNames[m_currentSelection]);
+//        m_prototype->loadXml();
+//        m_effectiveSelection=m_currentSelection;
+//    }
+//    return m_prototype;
+//}
+
+void StandardItemModelExplorer::unselect()
+{
+    m_activeSelection=-1;
+    //m_currentSelection=-1;
+   // m_effectiveSelection=-1;
+}
+
+void StandardItemModelExplorer::loadSavedModelIndex()
+{
+    setActiveSelection(m_savedIndex);
+}
+
+void StandardItemModelExplorer::saveActiveModelIndex()
+{
+   m_savedIndex=m_activeSelection;
+}
+
+void StandardItemModelExplorer::switchSavedAndActiveModelIndex()
+{
+    int index=m_activeSelection;
+    loadSavedModelIndex();
+    m_savedIndex=index;
+}
+

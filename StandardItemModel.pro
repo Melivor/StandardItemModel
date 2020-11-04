@@ -20,6 +20,7 @@ SOURCES += \
     standarditem.cpp \
     standarditemmodel.cpp \
     standarditemmodelexplorer.cpp \
+    standarditemwithactions.cpp \
     standarditemwithslaves.cpp \
     standarditemwithslavesdisablebyboolvalue.cpp
 
@@ -28,6 +29,7 @@ HEADERS += \
     standarditem.h \
     standarditemmodel.h \
     standarditemmodelexplorer.h \
+    standarditemwithactions.h \
     standarditemwithslaves.h \
     standarditemwithslavesdisablebyboolvalue.h
 

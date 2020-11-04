@@ -9,3 +9,8 @@ void StandardItemWithSlaves::setData(const QVariant &value, int role)
 
 }
 
+
+void StandardItemWithSlaves::updateSlave(int role)
+{
+
+}

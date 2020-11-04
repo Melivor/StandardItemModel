@@ -12,7 +12,7 @@ class StandardItemModel : public QStandardItemModel
 
 public:
     StandardItemModel(const QString& name="", const QString& root="", QObject* parent=nullptr);
-    StandardItemModel(const StandardItemModel& other);
+    //StandardItemModel(const StandardItemModel& other);
     enum Roles {
         QmlFileRole = Qt::UserRole + 500,
         NameRole,
@@ -33,12 +33,14 @@ public:
     void loadXml(const QString& path="");
    // void setSection(const QString& name, int start, int end);
     void appendRow(StandardItem *item);
+    void appendRows(QList<StandardItem *> items);
     inline void appendSection(StandardItemModel* section){m_sections.append(section);section->setParent(this);}
-    inline void setName(const QString& name){m_name=name;}
+    inline void setName(const QString& name){m_name=name;emit nameChanged();}
     inline void setRoot(const QString& root){m_root=root;}
     inline const QString& name(){return m_name;emit nameChanged();}
     inline const QString& root(){return m_root;}
     QString findPath() const;
+    static QString findPath(const QString& name, const QString& root);
 private :
     QList<StandardItemModel*> m_sections;
     QString m_name;
