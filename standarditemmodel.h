@@ -9,6 +9,7 @@ class StandardItemModel : public QStandardItemModel
     Q_OBJECT
     Q_PROPERTY(QList<StandardItemModel*> sections READ sections CONSTANT)
     Q_PROPERTY(QString name READ name NOTIFY nameChanged)
+    Q_PROPERTY(QString root READ root CONSTANT)
 
 public:
     StandardItemModel(const QString& name="", const QString& root="", QObject* parent=nullptr);
