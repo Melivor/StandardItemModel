@@ -1,7 +1,11 @@
 #ifndef STANDARDITEMMODELEXPLORER_H
 #define STANDARDITEMMODELEXPLORER_H
 #include "standarditemmodel.h"
+<<<<<<< HEAD
 #include <QSortFilterProxyModel>
+=======
+#include "QDebug"
+>>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
 class StandardItemModelExplorer : public QAbstractListModel
 {
     Q_OBJECT
@@ -19,10 +23,18 @@ public:
     Q_INVOKABLE void setActiveSelection(int row, bool save=true);
     //Q_INVOKABLE void setCurrentSelection(const QString& name);
     Q_INVOKABLE void setActiveSelection(const QString& name);
+    Q_INVOKABLE void copyProfilSettings(const QString& name);
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
+<<<<<<< HEAD
     Q_INVOKABLE void setFilter(const QString& filter);
+=======
+    Q_INVOKABLE QString path(){QString path=m_prototype->findPath();auto strList=path.split("/"); return path.remove(strList.back());}
+    Q_INVOKABLE QString pathXml(){return m_prototype->findPath();}
+
+   // Q_INVOKABLE QString defaultName(){return m_defaultName;}
+>>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
     //Q_INVOKABLE void deleteCurrentSelection();
     void getModelList();
     Q_INVOKABLE void addNew(const QString& name="", bool setActiveSelection=false);
@@ -32,24 +44,25 @@ public:
     //int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
     //QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
+    void setActiveData(const QVariant& value, int row, int column=0, int section=-1, int role=Qt::DisplayRole);
+    void setActiveData(const QString& dataName, const QVariant& value){if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return;} else {setActiveData(value,m_dataRow.at(dataName),0,m_dataSection.at(dataName));}}
     QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
+    QVariant getActiveData(const QString& dataName){ if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return QVariant();} else{ return getActiveData(m_dataRow.at(dataName), 0, m_dataSection.at(dataName));} }
 private :
+    std::map<QString, int> m_dataSection;
+    std::map<QString, int> m_dataRow;
     void setEffectiveSelection(int row);
     void deleteModel(const QString& name);
     QVariant getData(StandardItemModel* model, int row, int column, int section, int role) const;
     void unselect();
     QString m_rootPath;
+    QString m_defaultName;
     QStringList m_modelNames;
     int m_activeSelection=-1;
     int m_savedIndex=0;
-    //int m_currentSelection=-1;
-    //mutable int m_effectiveSelection=-1;
-    //StandardItemModel* m_activeModel=nullptr;
-    //StandardItemModel* m_currentModel=nullptr;
     StandardItemModel* m_prototype=nullptr;
     QSortFilterProxyModel * m_filteredModel=nullptr;
 signals:
-    //void currentSelectionChanged();
     void activeSelectionChanged();
 };
 
