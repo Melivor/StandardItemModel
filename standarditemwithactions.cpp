@@ -4,7 +4,7 @@
 void StandardItemWithActions::setData(const QVariant &value, int role)
 {
 
-    StandardItem::setData(value, role);
+   StandardItem::setData(value, role);
    performActions(value, role);
 
 }

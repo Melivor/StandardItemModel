@@ -10,7 +10,8 @@ StandardItemModelExplorer::StandardItemModelExplorer(StandardItemModel *prototyp
         m_prototype->saveAsXml();
         getModelList();
     }
-
+    m_filteredModel=new QSortFilterProxyModel(this);
+    m_filteredModel->setSourceModel(this);
 
 }
 
@@ -211,3 +212,7 @@ void StandardItemModelExplorer::switchSavedAndActiveModelIndex()
     m_savedIndex=index;
 }
 
+void StandardItemModelExplorer::setFilter(const QString &filter)
+{
+    //qDebug()<<"Setting filter";
+    m_filteredModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));}
