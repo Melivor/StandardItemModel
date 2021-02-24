@@ -32,9 +32,16 @@ public:
     virtual QHash<int,QByteArray> roleNames() const override;
     void save(QSettings& settings);
     Q_INVOKABLE void saveAsXml(const QString& path="");
+    void saveMetaInfo(const QString& path="");
+    void saveMetaInfo(QSettings& settings);
     void load(QSettings& settings);
     void loadXml(const QString& path="");
+<<<<<<< HEAD
 
+=======
+    void loadMetaInfo(const QString& path="");
+    void loadMetaInfo(QSettings& settings);
+>>>>>>> b842ccffe73e4942de48b1ec0ae1b86b86c0cad4
    // void setSection(const QString& name, int start, int end);
     void appendRow(StandardItem *item);
     void appendRows(QList<StandardItem *> items);
@@ -45,6 +52,7 @@ public:
     inline const QString& root(){return m_root;}
     QString findPath() const;
     static QString findPath(const QString& name, const QString& root);
+    QString findPathMeta() const;
 private :
     QList<StandardItemModel*> m_sections;
     QString m_name;

@@ -10,7 +10,8 @@ StandardItemModelExplorer::StandardItemModelExplorer(StandardItemModel *prototyp
         m_prototype->saveAsXml();
         getModelList();
     }
-
+    m_filteredModel=new QSortFilterProxyModel(this);
+    m_filteredModel->setSourceModel(this);
 
     for(int row=0; row<m_prototype->rowCount(); ++row){
         QString str=m_prototype->data(m_prototype->index(row, 0),StandardItemModel::NameRole).toString();
@@ -290,3 +291,7 @@ void StandardItemModelExplorer::switchSavedAndActiveModelIndex()
     m_savedIndex=index;
 }
 
+void StandardItemModelExplorer::setFilter(const QString &filter)
+{
+    //qDebug()<<"Setting filter";
+    m_filteredModel->setFilterRegExp(QRegExp(filter, Qt::CaseInsensitive, QRegExp::FixedString));}

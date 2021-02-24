@@ -88,7 +88,7 @@ void StandardItemModel::save(QSettings &settings)
         }
     }
 
-    for(auto section:m_sections){
+    for(auto section:qAsConst(m_sections)){
         section->save(settings);
     }
 
@@ -106,6 +106,18 @@ QString StandardItemModel::findPath() const
     return dir.path()+"/"+m_name+".xml";
 }
 
+QString StandardItemModel::findPathMeta() const
+{
+    QString path=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
+    QDir dir(path);
+    if(m_root!=""){
+        dir.mkdir(m_root);
+        dir.cd(m_root);
+    }
+    dir.mkdir("Meta");
+    dir.cd("Meta");
+    return dir.path()+"/"+m_name+"-meta.xml";
+}
 QString StandardItemModel::findPath(const QString &name, const QString &root)
 {
     QString path=QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
@@ -126,6 +138,68 @@ void StandardItemModel::saveAsXml(const QString &path)
         QSettings settings(path,xmlFormat);
         save(settings);
     }
+}
+
+
+void StandardItemModel::saveMetaInfo(const QString &path)
+{
+    if(path==""){
+        QSettings settings(findPathMeta(),xmlFormat);
+        qDebug()<<"Saving metainfo: "<<findPathMeta();
+        saveMetaInfo(settings);
+    }
+    else{
+        QSettings settings(path,xmlFormat);
+        saveMetaInfo(settings);
+    }
+}
+
+void StandardItemModel::saveMetaInfo(QSettings &settings)
+{
+    if(m_name==""){
+        settings.beginGroup("Settings");
+    }
+    else{
+        settings.beginGroup(clean(m_name));
+
+    }
+
+
+    for(int column=0; column<columnCount();++column){
+        auto str=clean(headerData(column, Qt::Horizontal).toString());
+        if(str!=""){
+            settings.beginGroup(clean(str));
+        }
+        else if(columnCount()>1){
+            str="Column"+QString::number(column);settings.beginGroup(str);
+        }
+        for(int row=0; row<rowCount();++row){
+            auto header=clean(headerData(row, Qt::Vertical).toString());
+            if(header==""){
+                header="Row"+QString::number(row);
+            }
+            settings.beginGroup(header);
+
+            QHash<int, QByteArray> roleNames = this->roleNames();
+            for(auto i=roleNames.begin(); i!=roleNames.end(); ++i){
+                if(i->data()){
+                    settings.setValue(i->data(),data(index(row,column),i.key()));
+                }
+
+            }
+            settings.endGroup();
+
+        }
+        if(str!=""){
+            settings.endGroup();
+        }
+    }
+
+    for(auto section:qAsConst(m_sections)){
+        section->saveMetaInfo(settings);
+    }
+
+    settings.endGroup();
 }
 
 void StandardItemModel::loadXml(const QString &path)
@@ -165,8 +239,63 @@ void StandardItemModel::load(QSettings &settings)
         }
 
     }
-    for(auto section:m_sections){
+    for(auto section:qAsConst(m_sections)){
         section->load(settings);
+    }
+    settings.endGroup();
+
+    endResetModel();
+}
+
+void StandardItemModel::loadMetaInfo(const QString &path)
+{
+
+    if(path==""){
+        QSettings settings(findPathMeta(),xmlFormat);
+        loadMetaInfo(settings);
+    }
+    else{
+        QSettings settings(path,xmlFormat);
+        loadMetaInfo(settings);
+    }
+}
+
+void StandardItemModel::loadMetaInfo(QSettings &settings)
+{
+    beginResetModel();
+    if(m_name==""){
+        settings.beginGroup("Settings");
+    }
+    else{
+        settings.beginGroup(clean(m_name));
+    }
+    for(int column=0; column<columnCount();++column){
+//        auto str=clean(headerData(column, Qt::Horizontal).toString());
+//        if(str!=""){
+//            settings.beginGroup(clean(str));
+//        }
+
+//        for(int row=0; row<rowCount();++row){
+//            auto header=clean(headerData(row, Qt::Vertical).toString());
+//            settings.beginGroup(header);
+
+//            QHash<int, QByteArray> roleNames = this->roleNames();
+//            //for(auto i=roleNames.begin(); i!=roleNames.end(); ++i){
+////                if(i->data()){
+////                    settings.setValue(i->data(),data(index(row,column),i.key()));
+////                }
+//                //appendRow(sett, 0.01,"BoundNumberField.qml",0,tr("Height of each layer to print"),"mm",0.005,0.5,{}));
+
+//            //}
+//            settings.endGroup();
+//        }
+//        if(str!=""){
+//            settings.endGroup();
+//        }
+
+    }
+    for(auto section:qAsConst(m_sections)){
+        section->loadMetaInfo(settings);
     }
     settings.endGroup();
 

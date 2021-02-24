@@ -1,11 +1,16 @@
 #ifndef STANDARDITEMMODELEXPLORER_H
 #define STANDARDITEMMODELEXPLORER_H
 #include "standarditemmodel.h"
+<<<<<<< HEAD
+#include <QSortFilterProxyModel>
+=======
 #include "QDebug"
+>>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
 class StandardItemModelExplorer : public QAbstractListModel
 {
     Q_OBJECT
     Q_PROPERTY(StandardItemModel* activeModel READ activeModel CONSTANT )
+    Q_PROPERTY(QSortFilterProxyModel* filteredModel READ filteredModel CONSTANT )
    // Q_PROPERTY(StandardItemModel* currentModel READ currentModel CONSTANT)
     //Q_PROPERTY(int currentSelection READ currentSelection WRITE setCurrentSelection NOTIFY currentSelectionChanged)
     Q_PROPERTY(int activeSelection READ activeSelection WRITE setActiveSelection NOTIFY activeSelectionChanged)
@@ -23,16 +28,21 @@ public:
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
+<<<<<<< HEAD
+    Q_INVOKABLE void setFilter(const QString& filter);
+=======
     Q_INVOKABLE QString path(){QString path=m_prototype->findPath();auto strList=path.split("/"); return path.remove(strList.back());}
     Q_INVOKABLE QString pathXml(){return m_prototype->findPath();}
     Q_INVOKABLE bool isEmpty(){return m_modelNames.size()==0; }
    // Q_INVOKABLE QString defaultName(){return m_defaultName;}
+>>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
     //Q_INVOKABLE void deleteCurrentSelection();
     void getModelList();
     QString getProfilSettingsPath();
     Q_INVOKABLE void addNew(const QString& name="", bool setActiveSelection=false);
     //StandardItemModel* currentModel() const ;
     StandardItemModel* activeModel() const ;
+    QSortFilterProxyModel * filteredModel(){return m_filteredModel;}
     //int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
     //QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
@@ -55,6 +65,7 @@ private :
     int m_activeSelection=-1;
     int m_savedIndex=0;
     StandardItemModel* m_prototype=nullptr;
+    QSortFilterProxyModel * m_filteredModel=nullptr;
 signals:
     void activeSelectionChanged();
 };
