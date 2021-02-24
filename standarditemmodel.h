@@ -36,12 +36,8 @@ public:
     void saveMetaInfo(QSettings& settings);
     void load(QSettings& settings);
     void loadXml(const QString& path="");
-<<<<<<< HEAD
-
-=======
     void loadMetaInfo(const QString& path="");
     void loadMetaInfo(QSettings& settings);
->>>>>>> b842ccffe73e4942de48b1ec0ae1b86b86c0cad4
    // void setSection(const QString& name, int start, int end);
     void appendRow(StandardItem *item);
     void appendRows(QList<StandardItem *> items);
