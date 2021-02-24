@@ -1,11 +1,8 @@
 #ifndef STANDARDITEMMODELEXPLORER_H
 #define STANDARDITEMMODELEXPLORER_H
 #include "standarditemmodel.h"
-<<<<<<< HEAD
 #include <QSortFilterProxyModel>
-=======
 #include "QDebug"
->>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
 class StandardItemModelExplorer : public QAbstractListModel
 {
     Q_OBJECT
@@ -28,14 +25,11 @@ public:
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
-<<<<<<< HEAD
     Q_INVOKABLE void setFilter(const QString& filter);
-=======
     Q_INVOKABLE QString path(){QString path=m_prototype->findPath();auto strList=path.split("/"); return path.remove(strList.back());}
     Q_INVOKABLE QString pathXml(){return m_prototype->findPath();}
     Q_INVOKABLE bool isEmpty(){return m_modelNames.size()==0; }
    // Q_INVOKABLE QString defaultName(){return m_defaultName;}
->>>>>>> cebcdf0241f5f4249fd898d5c72ef9da1f5c85f5
     //Q_INVOKABLE void deleteCurrentSelection();
     void getModelList();
     QString getProfilSettingsPath();
