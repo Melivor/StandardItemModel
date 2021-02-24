@@ -38,6 +38,8 @@ QHash<int, QByteArray> StandardItemModel::roleNames() const
     roleNames.insert(FlagRole, "flags");
     roleNames.insert(ChoiceListRole, "choiceList");
     roleNames.insert(ComplexityRole, "complexity");
+    roleNames.insert(ErrorRole, "error");
+    roleNames.insert(ErrorStringRole, "errorString");
     return roleNames;
 }
 
@@ -138,6 +140,7 @@ void StandardItemModel::loadXml(const QString &path)
         load(settings);
     }
 }
+
 void StandardItemModel::load(QSettings &settings)
 {
     beginResetModel();

@@ -24,7 +24,9 @@ public:
         DescriptionRole,
         FlagRole,
         ChoiceListRole,
-        ComplexityRole
+        ComplexityRole,
+        ErrorRole,
+        ErrorStringRole
     };
     QList<StandardItemModel*> sections(){return m_sections;};
     virtual QHash<int,QByteArray> roleNames() const override;
@@ -32,6 +34,7 @@ public:
     Q_INVOKABLE void saveAsXml(const QString& path="");
     void load(QSettings& settings);
     void loadXml(const QString& path="");
+
    // void setSection(const QString& name, int start, int end);
     void appendRow(StandardItem *item);
     void appendRows(QList<StandardItem *> items);

@@ -96,6 +96,24 @@ void StandardItemModelExplorer::copyProfilSettings(const QString &name)
 
 }
 
+void StandardItemModelExplorer::deleteProfilSettings(const QString &name)
+{
+
+    if(QFile::remove(getProfilSettingsPath()+"/"+name+".xml")){
+        beginResetModel();
+        m_modelNames.removeAll(name);
+        endResetModel();
+    }
+
+
+   // m_prototype->deleteXml(name);
+}
+
+QString StandardItemModelExplorer::getProfilSettingsPath()
+{
+     return QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation)+"/"+m_rootPath;
+
+}
 void StandardItemModelExplorer::getModelList()
 {
 
@@ -187,7 +205,7 @@ void StandardItemModelExplorer::setActiveData(const QVariant &value, int row, in
     }
     if(section>-1){
         if(section<model->sections().size()){
-            auto&& subModel=model->sections()[section];
+            auto&& subModel=model->sections().at(section);
             if(row>=0 && row<subModel->rowCount() && column>=0 && column<subModel->columnCount()){
                 subModel->setData(subModel->index(row, column),value,role);
             }
@@ -198,6 +216,27 @@ void StandardItemModelExplorer::setActiveData(const QVariant &value, int row, in
         model->setData(model->index(row, column),value, role);
     }
     return;
+}
+
+StandardItem* StandardItemModelExplorer::item(int row, int column, int section)
+{
+    auto model=activeModel();
+    if(model==nullptr){
+        return nullptr;
+    }
+    if(section>-1){
+        if(section<model->sections().size()){
+            auto&& subModel=model->sections().at(section);
+            if(row>=0 && row<subModel->rowCount() && column>=0 && column<subModel->columnCount()){
+                return reinterpret_cast<StandardItem*>(subModel->item(row, column));
+            }
+        }
+        return nullptr;
+    }
+    if(row>=0 && row<model->rowCount() && column>=0 && column<model->columnCount()){
+        return reinterpret_cast<StandardItem*>(model->item(row, column));
+    }
+    return nullptr;
 }
 
 StandardItemModel* StandardItemModelExplorer::activeModel() const

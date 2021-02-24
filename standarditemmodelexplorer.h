@@ -18,22 +18,26 @@ public:
     Q_INVOKABLE void setActiveSelection(int row, bool save=true);
     //Q_INVOKABLE void setCurrentSelection(const QString& name);
     Q_INVOKABLE void setActiveSelection(const QString& name);
+    Q_INVOKABLE void deleteProfilSettings(const QString& name);
     Q_INVOKABLE void copyProfilSettings(const QString& name);
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
     Q_INVOKABLE QString path(){QString path=m_prototype->findPath();auto strList=path.split("/"); return path.remove(strList.back());}
     Q_INVOKABLE QString pathXml(){return m_prototype->findPath();}
-
+    Q_INVOKABLE bool isEmpty(){return m_modelNames.size()==0; }
    // Q_INVOKABLE QString defaultName(){return m_defaultName;}
     //Q_INVOKABLE void deleteCurrentSelection();
     void getModelList();
+    QString getProfilSettingsPath();
     Q_INVOKABLE void addNew(const QString& name="", bool setActiveSelection=false);
     //StandardItemModel* currentModel() const ;
     StandardItemModel* activeModel() const ;
     //int currentSelection(){return m_currentSelection;}
     int activeSelection(){return m_activeSelection;}
     //QVariant  getCurrentData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
+    StandardItem* item(int row, int column=0, int section=-1);
+    StandardItem* item(const QString& dataName){ if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return nullptr;} else{ return item(m_dataRow.at(dataName), 0, m_dataSection.at(dataName));} }
     void setActiveData(const QVariant& value, int row, int column=0, int section=-1, int role=Qt::DisplayRole);
     void setActiveData(const QString& dataName, const QVariant& value){if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return;} else {setActiveData(value,m_dataRow.at(dataName),0,m_dataSection.at(dataName));}}
     QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
