@@ -81,6 +81,13 @@ void StandardItemModel::save(QSettings &settings)
                 header="Row"+QString::number(row);
             }
             settings.setValue(header,data(index(row,column)));
+            QList<QVariant> list=data(index(row, column),RolesTobeSaved).toList();
+            for(int i=0; i<list.size(); ++i){
+                int role=list[i].toInt();
+                //settings.beginGroup(QString::number(role));
+
+                settings.setValue(header+QString::number(role),data(index(row,column), role));
+            }
 
         }
         if(str!=""){
@@ -232,7 +239,12 @@ void StandardItemModel::load(QSettings &settings)
 
         for(int row=0; row<rowCount();++row){
             setData(index(row, column), settings.value(clean(headerData(row, Qt::Vertical).toString())),Qt::DisplayRole);
+            QList<QVariant> list=data(index(row, column),RolesTobeSaved).toList();
+            for(int i=0; i<list.size(); ++i){
+                int role=list[i].toInt();
 
+                setData(index(row, column), settings.value(clean(headerData(row, Qt::Vertical).toString())+QString::number(role)),role);
+            }
         }
         if(str!=""){
             settings.endGroup();

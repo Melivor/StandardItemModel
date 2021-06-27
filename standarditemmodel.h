@@ -26,7 +26,8 @@ public:
         ChoiceListRole,
         ComplexityRole,
         ErrorRole,
-        ErrorStringRole
+        ErrorStringRole,
+        RolesTobeSaved
     };
     QList<StandardItemModel*> sections(){return m_sections;};
     virtual QHash<int,QByteArray> roleNames() const override;

@@ -80,19 +80,19 @@ void StandardItemModelExplorer::setActiveSelection(int row, bool save)
 //    m_prototype->loadXml();
 //    qDebug()<<"Effectice selection is "<<row<<m_modelNames[row];
 //}
-void StandardItemModelExplorer::setActiveSelection(const QString& name)
+void StandardItemModelExplorer::setActiveSelection(const QString& name, bool save)
 {
     int index=m_modelNames.indexOf(name);
     if(index>=0){
-        setActiveSelection(index);
+        setActiveSelection(index, save);
     }
 }
 
-void StandardItemModelExplorer::copyProfilSettings(const QString &name)
+void StandardItemModelExplorer::copyProfilSettings(const QString &name, bool save)
 {
 
     QString pname=m_prototype->name();
-    setActiveSelection(name);
+    setActiveSelection(name, save);
     m_prototype->setName(pname);
 
 }

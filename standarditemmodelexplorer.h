@@ -19,9 +19,9 @@ public:
     //Q_INVOKABLE void setCurrentSelection(int row, bool save=true);
     Q_INVOKABLE void setActiveSelection(int row, bool save=true);
     //Q_INVOKABLE void setCurrentSelection(const QString& name);
-    Q_INVOKABLE void setActiveSelection(const QString& name);
+    Q_INVOKABLE void setActiveSelection(const QString& name, bool save=true);
     Q_INVOKABLE void deleteProfilSettings(const QString& name);
-    Q_INVOKABLE void copyProfilSettings(const QString& name);
+    Q_INVOKABLE void copyProfilSettings(const QString& name, bool save=true);
     Q_INVOKABLE void saveActiveModelIndex();
     Q_INVOKABLE void loadSavedModelIndex();
     Q_INVOKABLE void switchSavedAndActiveModelIndex();
