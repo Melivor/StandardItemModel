@@ -45,7 +45,7 @@ public:
     void setActiveData(const QVariant& value, int row, int column=0, int section=-1, int role=Qt::DisplayRole);
     void setActiveData(const QString& dataName, const QVariant& value){if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return;} else {setActiveData(value,m_dataRow.at(dataName),0,m_dataSection.at(dataName));}}
     QVariant  getActiveData(int row, int column=0, int section=-1, int role=Qt::DisplayRole) const;
-    QVariant getActiveData(const QString& dataName){ if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return QVariant();} else{ return getActiveData(m_dataRow.at(dataName), 0, m_dataSection.at(dataName));} }
+    QVariant getActiveData(const QString& dataName, int role=Qt::DisplayRole){ if(m_dataRow.count(dataName)==0||m_dataSection.count(dataName)==0){qWarning()<<"StandardItemModelExplorer: "<<dataName<<" No such data";return QVariant();} else{ return getActiveData(m_dataRow.at(dataName), 0, m_dataSection.at(dataName), role);} }
 private :
     std::map<QString, int> m_dataSection;
     std::map<QString, int> m_dataRow;
